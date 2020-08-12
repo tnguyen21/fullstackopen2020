@@ -6,6 +6,8 @@ const Stats = ({good, neutral, bad}) => (
     <p>good {good}</p>
     <p>neutral {neutral}</p>
     <p>bad {bad}</p>
+    <p>average {(good * 1 + bad * -1) / (good+neutral+bad)}</p>
+    <p>positive {good / (good+neutral+bad)}%</p>
   </div>
 )
 
