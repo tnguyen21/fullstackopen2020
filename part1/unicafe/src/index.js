@@ -1,15 +1,25 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const Stats = ({good, neutral, bad}) => (
-  <div>
-    <p>good {good}</p>
-    <p>neutral {neutral}</p>
-    <p>bad {bad}</p>
-    <p>average {(good * 1 + bad * -1) / (good+neutral+bad)}</p>
-    <p>positive {good / (good+neutral+bad)}%</p>
-  </div>
-)
+const Stats = ({good, neutral, bad}) => {
+  if ((good + neutral + bad) === 0) {
+    return (
+      <div>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>
+      <p>bad {bad}</p>
+      <p>average {(good * 1 + bad * -1) / (good+neutral+bad)}</p>
+      <p>positive {good / (good+neutral+bad)}%</p>
+    </div>
+  )
+}
 
 const Button = ({onClick, text}) => (
   <button onClick = {onClick}>
