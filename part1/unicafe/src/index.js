@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
 const Stat = ({text, value}) => (
-  <div>
-    <p> {text} {value}</p>
-  </div>
+  <tr>
+    <td>{text}</td> 
+    <td>{value}</td>
+  </tr>
 )
 
 const Stats = ({good, neutral, bad}) => {
@@ -20,11 +21,13 @@ const Stats = ({good, neutral, bad}) => {
   let positive = good / (good+neutral+bad);
   return (
     <div>
-      <Stat text="good" value={good} />
-      <Stat text="neutral" value={neutral} />
-      <Stat text="bad" value={bad} />
-      <Stat text="average" value={average} />
-      <Stat text="positive" value={positive} />
+      <table>
+        <Stat text="good" value={good} />
+        <Stat text="neutral" value={neutral} />
+        <Stat text="bad" value={bad} />
+        <Stat text="average" value={average} />
+        <Stat text="positive" value={positive} />
+      </table>
     </div>
   )
 }
