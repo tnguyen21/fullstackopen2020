@@ -1,6 +1,12 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+const Stat = ({text, value}) => (
+  <div>
+    <p> {text} {value}</p>
+  </div>
+)
+
 const Stats = ({good, neutral, bad}) => {
   if ((good + neutral + bad) === 0) {
     return (
@@ -8,15 +14,17 @@ const Stats = ({good, neutral, bad}) => {
         <p>No feedback given</p>
       </div>
     )
-  }
-
+  };
+  
+  let average = (good * 1 + bad * -1) / (good+neutral+bad);
+  let positive = good / (good+neutral+bad);
   return (
     <div>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>average {(good * 1 + bad * -1) / (good+neutral+bad)}</p>
-      <p>positive {good / (good+neutral+bad)}%</p>
+      <Stat text="good" value={good} />
+      <Stat text="neutral" value={neutral} />
+      <Stat text="bad" value={bad} />
+      <Stat text="average" value={average} />
+      <Stat text="positive" value={positive} />
     </div>
   )
 }
