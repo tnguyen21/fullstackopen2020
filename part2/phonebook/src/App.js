@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import phonebookService from './services/people';
 
 const Input = ({text, placeholder, onChangeHandler}) => {
   return (
@@ -27,11 +27,12 @@ const PersonsForm = ({onSubmit, inputs}) => {
   )
 }
 
-const Persons = ({ displayedPersons }) => {
+const Person = ({ person, deletePerson }) => {
   return (
-    <div>
-      {displayedPersons.map((person) => <div key={person.name}>{person.name} | {person.number}</div>)}
-    </div>
+    <form onSubmit={deletePerson}>
+      {person.name} | {person.number}
+      <button type="submit">delete</button>
+    </form>
   )
 }
 
@@ -42,11 +43,9 @@ const App = () => {
   const [search, setNewSearch] = useState('');
   
   useEffect(() => {
-    console.log("effect");
-    axios
-      .get('http://localhost:3001/persons')
+    phonebookService
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled');
         setPersons(response.data);
       })
   }, [])
@@ -63,10 +62,25 @@ const App = () => {
         name: newName,
         number: newNumber,
       }
-      setPersons(persons.concat(newPerson));
-      setNewName("");
-      setNewNumber("");
+      phonebookService
+        .createPerson(newPerson)
+        .then(response => {
+          setPersons(persons.concat(response.data));
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch(error => {
+          console.log(error);
+        })
     }
+  }
+
+  const deletePerson = (person) => {
+    if (window.confirm(`Do you really want to delete ${person.name}?`)) {
+      phonebookService
+        .deletePerson(person.id)
+    }
+
   }
   
   const handleNameChange = (event) => {
@@ -93,7 +107,13 @@ const App = () => {
         ]
       } />
       <h2>Numbers</h2>
-      <Persons displayedPersons={displayedPersons} />
+      {displayedPersons.map((person) => 
+        <Person 
+          key={person.id}
+          person={person}
+          deletePerson={() => deletePerson(person)}
+        />
+      )}
     </div>
   )
 }
