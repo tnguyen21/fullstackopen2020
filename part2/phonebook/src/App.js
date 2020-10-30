@@ -1,6 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import phonebookService from './services/people';
 
+const Message = ({ message }) => {
+  const msgStyle = {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize:20,
+    padding:10,
+    marginBottom:10
+  }
+  
+  if (message === null) {
+    return null;
+  }
+  
+  return (
+    <div style={msgStyle}>
+      {message}
+    </div>
+  )
+}
+
 const Input = ({text, placeholder, onChangeHandler}) => {
   return (
     <div>
@@ -41,6 +61,7 @@ const App = () => {
   const [newName, setNewName] = useState('John Doe');
   const [newNumber, setNewNumber] = useState('123-456-7890');
   const [search, setNewSearch] = useState('');
+  const [message, setMessage] = useState(null);
   
   useEffect(() => {
     phonebookService
@@ -68,9 +89,13 @@ const App = () => {
           setPersons(persons.concat(response.data));
           setNewName("");
           setNewNumber("");
+          setMessage(`${response.data.name} was added to the phonebook.`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 3000)
         })
         .catch(error => {
-          console.log(error);
+          setMessage(error);
         })
     }
   }
@@ -97,6 +122,7 @@ const App = () => {
 
   return (
     <div>
+      <Message message={message} />
       <h2>Phonebook</h2>
       <Input text="filter shown with:" placeholder={search} onChangeHandler={handleSearchChange} />
       <h2>add a new</h2>
