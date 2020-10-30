@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Input = ({text, placeholder, onChangeHandler}) => {
   return (
@@ -15,8 +16,8 @@ const PersonsForm = ({onSubmit, inputs}) => {
   return (
     <form onSubmit={onSubmit}>
       <div>
-        {inputs.map((input) => 
-          <Input text={input.text} placeholder={input.placeholder} onChangeHandler={input.onChangeHandler} /> 
+        {inputs.map((input, i) => 
+          <Input key={i} text={input.text} placeholder={input.placeholder} onChangeHandler={input.onChangeHandler} /> 
         )}
       </div>
       <div>
@@ -35,16 +36,21 @@ const Persons = ({ displayedPersons }) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('John Doe');
   const [newNumber, setNewNumber] = useState('123-456-7890');
   const [search, setNewSearch] = useState('');
   
+  useEffect(() => {
+    console.log("effect");
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled');
+        setPersons(response.data);
+      })
+  }, [])
+
   const displayedPersons = persons.filter((person) => person.name.toLowerCase().includes(search));
 
   const addPerson = (event) => {
